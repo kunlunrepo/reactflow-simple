@@ -1,5 +1,5 @@
 import 'reactflow/dist/style.css';  // reactflow样式
-import ReactFlow, { applyEdgeChanges, applyNodeChanges, NodeChange, Node, Edge, addEdge } from 'reactflow';
+import ReactFlow, { applyEdgeChanges, applyNodeChanges, NodeChange, Node, Edge, addEdge, Position } from 'reactflow';
 import {useCallback, useState} from "react";
 import './custom/text-updater-node.css'
 import TextUpdaterNode from "./custom/TextUpdaterNode.tsx";
@@ -15,11 +15,30 @@ function App() {
     // 初始化节点
     const initialNodes = [
         { id: 'node-1', type: 'textUpdater', position: { x: 0, y: 0 }, data: { value: 123 } },
+        {
+            id: 'node-2',
+            type: 'output',
+            targetPosition: Position.Top,
+            position: { x: 0, y: 200 },
+            data: { label: 'node 2' },
+        },
+        {
+            id: 'node-3',
+            type: 'output',
+            targetPosition: Position.Top,
+            position: { x: 200, y: 200 },
+            data: { label: 'node 3' },
+        },
+    ];
+    // 初始化边
+    const initialEdges = [
+        { id: 'edge-1', source: 'node-1', target: 'node-2', sourceHandle: 'a' },
+        { id: 'edge-2', source: 'node-1', target: 'node-3', sourceHandle: 'b' },
     ];
     // 初始化节点
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     // 初始化边缘
-    const [edges, setEdges] = useState<Edge[]>([]);
+    const [edges, setEdges] = useState<Edge[]>(initialEdges);
     // 节点变化 (选择、拖动、删除节点时，触发这个函数，然后利用applyNodeChanges函数处理节点变化，主要是坐标等变化)
     const onNodesChange = useCallback(
         (changes: NodeChange[]) => {
