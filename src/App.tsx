@@ -1,5 +1,15 @@
 import 'reactflow/dist/style.css';  // reactflow样式
-import {addEdge, ReactFlow, useEdgesState, useNodesState, Edge, Connection} from "reactflow";
+import {
+    addEdge,
+    ReactFlow,
+    useEdgesState,
+    useNodesState,
+    Edge,
+    Connection,
+    Controls,
+    MiniMap,
+    Background, BackgroundVariant
+} from "reactflow";
 import {useCallback} from "react";
 
 function App() {
@@ -25,7 +35,15 @@ function App() {
   return (
     <>
       <div style={{width: '100vw', height: '100vh'}}>
-          <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect}/>
+          {/*画布*/}
+          <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect}>
+              {/*缩放控制栏*/}
+              <Controls />
+              {/*缩略图*/}
+              <MiniMap />
+              {/*背景图*/}
+              <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+          </ReactFlow>
       </div>
     </>
   )
