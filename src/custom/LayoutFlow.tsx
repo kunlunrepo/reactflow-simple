@@ -7,30 +7,45 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { initialNodes, initialEdges } from './NodesEdges.tsx';
-import Dagre from '@dagrejs/dagre';
+import ELK from 'elkjs/lib/elk.bundled.js';
 
 
-// 创建布局对象
-const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+const elk = new ELK();
 
-// 布局元素
-const getLayoutedElements = (nodes, edges, options) => {
-    // 图形
-    g.setGraph({ rankdir: options.direction });
-
-    edges.forEach((edge) => g.setEdge(edge.source, edge.target));
-    nodes.forEach((node) => g.setNode(node.id, node));
-
-    Dagre.layout(g);
-
-    return {
-        nodes: nodes.map((node) => {
-            const { x, y } = g.node(node.id);
-            return { ...node, position: { x, y } };
-        }),
-        edges,
+const useLayoutedElements = () => {
+    const { getNodes, setNodes, getEdges, fitView } = useReactFlow();
+    const defaultOptions = {
+        'elk.algorithm': 'layered',
+        'elk.layered.spacing.nodeNodeBetweenLayers': 100,
+        'elk.spacing.nodeNode': 80,
     };
+
+    const getLayoutedElements = useCallback((options) => {
+        const layoutOptions = { ...defaultOptions, ...options };
+        const graph = {
+            id: 'root',
+            layoutOptions: layoutOptions,
+            children: getNodes(),
+            edges: getEdges(),
+        };
+
+        elk.layout(graph).then(({ children }) => {
+            // By mutating the children in-place we saves ourselves from creating a
+            // needless copy of the nodes array.
+            children.forEach((node:ElkNode) => {
+                node.position = { x: node.x, y: node.y };
+            });
+
+            setNodes(children);
+            window.requestAnimationFrame(() => {
+                fitView();
+            });
+        });
+    }, []);
+
+    return { getLayoutedElements };
 };
+
 
 // 布局流程
 const LayoutFlow = () => {
@@ -40,6 +55,8 @@ const LayoutFlow = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     // 初始化边
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+    const { getLayoutedElements } = useLayoutedElements();
 
     // 获取布局元素
     const onLayout = useCallback(
@@ -65,8 +82,38 @@ const LayoutFlow = () => {
             fitView
         >
             <Panel position="top-right">
-                <button onClick={() => onLayout('TB')}>垂直</button>
-                <button onClick={() => onLayout('LR')}>水平</button>
+                <button
+                    onClick={() =>
+                        getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'DOWN' })
+                    }
+                >
+                    vertical layout
+                </button>
+                <button
+                    onClick={() =>
+                        getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'RIGHT' })
+                    }
+                >
+                    horizontal layout
+                </button>
+                <button
+                    onClick={() =>
+                        getLayoutedElements({
+                            'elk.algorithm': 'org.eclipse.elk.radial',
+                        })
+                    }
+                >
+                    radial layout
+                </button>
+                <button
+                    onClick={() =>
+                        getLayoutedElements({
+                            'elk.algorithm': 'org.eclipse.elk.force',
+                        })
+                    }
+                >
+                    force layout
+                </button>
             </Panel>
         </ReactFlow>
     );
