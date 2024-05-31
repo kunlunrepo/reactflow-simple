@@ -83,6 +83,13 @@ function App() {
                         <button onClick={() => setVariant(BackgroundVariant.Lines)}>-</button>
                         <button onClick={() => setVariant(BackgroundVariant.Cross)}>+</button>
                     </Panel>
+                    {/*各个位置控制板*/}
+                    <Panel position="top-left">top-left</Panel>
+                    <Panel position="top-center">top-center</Panel>
+                    <Panel position="top-right">top-right</Panel>
+                    <Panel position="bottom-left">bottom-left</Panel>
+                    <Panel position="bottom-center">bottom-center</Panel>
+                    <Panel position="bottom-right">bottom-right</Panel>
                 </ReactFlow>
             </div>
         </>
