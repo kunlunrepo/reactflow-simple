@@ -33,12 +33,23 @@ function App() {
         },
         [setEdges]
     );
+    // 默认边选项
+    const defaultEdgeOptions = {
+        type: 'smoothstep',
+        style: {stroke: 'red'}
+    };
 
   return (
     <>
       <div style={{width: '100vw', height: '100vh'}}>
           {/*画布*/}
-          <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} fitView={true}>
+          <ReactFlow nodes={nodes}
+                     edges={edges}
+                     onNodesChange={onNodesChange}
+                     onEdgesChange={onEdgesChange}
+                     onConnect={onConnect}
+                     defaultEdgeOptions={defaultEdgeOptions}
+                     fitView={true}>
           </ReactFlow>
       </div>
     </>
