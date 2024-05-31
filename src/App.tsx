@@ -7,7 +7,7 @@ import ReactFlow, {
     Edge,
     addEdge,
     SelectionMode,
-    MiniMap, Controls
+    MiniMap, Controls, Background, BackgroundVariant
 } from 'reactflow';
 import {useCallback, useState} from "react";
 import {initNodes} from "./flow/nodes.tsx";
@@ -54,7 +54,7 @@ function App() {
         }
     };
 
-    const panOnDrag = [1, 2];
+    const [variant, setVariant] = useState(BackgroundVariant.Cross);
 
     return (
         <>
@@ -74,6 +74,8 @@ function App() {
                         zoomable pannable />
                     {/*缩放控制栏*/}
                     <Controls />
+                    {/*背景图*/}
+                    <Background color="#ccc" variant={variant} />
                 </ReactFlow>
             </div>
         </>
