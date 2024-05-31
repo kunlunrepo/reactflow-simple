@@ -1,5 +1,14 @@
 import 'reactflow/dist/style.css';  // reactflow样式
-import ReactFlow, {applyEdgeChanges, applyNodeChanges, NodeChange, Node, Edge, addEdge, SelectionMode} from 'reactflow';
+import ReactFlow, {
+    applyEdgeChanges,
+    applyNodeChanges,
+    NodeChange,
+    Node,
+    Edge,
+    addEdge,
+    SelectionMode,
+    MiniMap
+} from 'reactflow';
 import {useCallback, useState} from "react";
 import {initNodes} from "./flow/nodes.tsx";
 import {initEdges} from "./flow/edges.tsx";
@@ -34,6 +43,17 @@ function App() {
         [setEdges]
     );
 
+    const nodeColor = (node) => {
+        switch (node.type) {
+            case 'input':
+                return '#6ede87';
+            case 'output':
+                return '#6865A5';
+            default:
+                return '#ff0072';
+        }
+    };
+
     const panOnDrag = [1, 2];
 
     return (
@@ -46,11 +66,12 @@ function App() {
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
                     onConnect={onConnect}
-                    panOnScroll
-                    selectionOnDrag
-                    panOnDrag={panOnDrag}
-                    selectionMode={SelectionMode.Partial}
                 >
+                    {/*小地图*/}
+                    <MiniMap
+                        nodeColor={nodeColor}
+                        nodeStrokeWidth={3}
+                        zoomable pannable />
                 </ReactFlow>
             </div>
         </>
