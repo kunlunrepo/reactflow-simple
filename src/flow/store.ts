@@ -16,6 +16,10 @@ import {
 import initialNodes from './nodes';
 import initialEdges from './edges';
 
+export type NodeData = {
+    color: string;
+};
+
 type RFState = {
     nodes: Node[];
     edges: Edge[];
@@ -24,6 +28,7 @@ type RFState = {
     onConnect: OnConnect;
     setNodes: (nodes: Node[]) => void;
     setEdges: (edges: Edge[]) => void;
+    updateNodeColor: (nodeId: string, color: string) => void;
 };
 
 // 获取存储的部分并调用操作
@@ -57,6 +62,18 @@ const useStore = create<RFState>((set, get) => ({
     // 设置边
     setEdges: (edges: Edge[]) => {
         set({ edges });
+    },
+    // 更新颜色
+    updateNodeColor: (nodeId: string, color: string) => {
+        set({
+            nodes: get().nodes.map((node) => {
+                if (node.id === nodeId) {
+                    // it's important to create a new object here, to inform React Flow about the changes
+                    node.data = { ...node.data, color };
+                }
+                return node;
+            }),
+        });
     },
 }));
 

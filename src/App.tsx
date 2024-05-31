@@ -4,6 +4,9 @@ import {
 } from "reactflow";
 import {useShallow} from 'zustand/react/shallow';
 import useStore from './flow/store';
+import ColorChooserNode from './flow/ColorChooserNode';
+
+const nodeTypes = { colorChooser: ColorChooserNode };
 
 const selector = (state: any) => ({
     nodes: state.nodes,
@@ -20,14 +23,17 @@ function App() {
     );
 
     return (
-        <ReactFlow
+        <div style={{ height: '100vh', width: '100vw'}}>
+            <ReactFlow
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
+            nodeTypes={nodeTypes}
             fitView
-        />
+            />
+        </div>
     );
 }
 
