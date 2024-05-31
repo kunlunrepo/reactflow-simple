@@ -8,9 +8,10 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import { initialNodes, initialEdges } from './NodesEdges.tsx';
 import ELK from 'elkjs/lib/elk.bundled.js';
+import {ELK as ELKBak, ElkNode} from "elkjs/lib/elk-api";
 
 
-const elk = new ELK();
+const elk: ELKBak = new ELK();
 
 const useLayoutedElements = () => {
     const { getNodes, setNodes, getEdges, fitView } = useReactFlow();
@@ -29,10 +30,11 @@ const useLayoutedElements = () => {
             edges: getEdges(),
         };
 
-        elk.layout(graph).then(({ children }) => {
+        elk.layout(graph)
+            .then(({ children }) => {
             // By mutating the children in-place we saves ourselves from creating a
             // needless copy of the nodes array.
-            children.forEach((node:ElkNode) => {
+            children.forEach((node) => {
                 node.position = { x: node.x, y: node.y };
             });
 
@@ -46,7 +48,6 @@ const useLayoutedElements = () => {
     return { getLayoutedElements };
 };
 
-
 // 布局流程
 const LayoutFlow = () => {
     //
@@ -57,21 +58,6 @@ const LayoutFlow = () => {
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
     const { getLayoutedElements } = useLayoutedElements();
-
-    // 获取布局元素
-    const onLayout = useCallback(
-        (direction) => {
-            const layouted = getLayoutedElements(nodes, edges, {direction});
-
-            setNodes([...layouted.nodes]);
-            setEdges([...layouted.edges]);
-
-            window.requestAnimationFrame(() => {
-                fitView();
-            });
-        },
-        [nodes, edges]
-    );
 
     return (
         <ReactFlow
