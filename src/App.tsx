@@ -3,10 +3,15 @@ import ReactFlow, { applyEdgeChanges, applyNodeChanges, NodeChange, Node, Edge, 
 import {useCallback, useState} from "react";
 import './custom/text-updater-node.css'
 import TextUpdaterNode from "./custom/TextUpdaterNode.tsx";
+import CustomEdge from "./custom/CustomEdge.tsx";
 
 // 自定义节点类型 在组件外部定义nodeType以防止重新渲染，也可以在组件内部使用useMemo 【注意位置】
 const nodeTypes = { textUpdater: TextUpdaterNode };
 
+// 自定义边类型
+const edgeTypes = {
+    'custom-edge': CustomEdge,
+};
 function App() {
     // 画背景图布样式
     const rfStyle = {
@@ -14,26 +19,12 @@ function App() {
     };
     // 初始化节点
     const initialNodes = [
-        { id: 'node-1', type: 'textUpdater', position: { x: 0, y: 0 }, data: { value: 123 } },
-        {
-            id: 'node-2',
-            type: 'output',
-            targetPosition: Position.Top,
-            position: { x: 0, y: 200 },
-            data: { label: 'node 2' },
-        },
-        {
-            id: 'node-3',
-            type: 'output',
-            targetPosition: Position.Top,
-            position: { x: 200, y: 200 },
-            data: { label: 'node 3' },
-        },
+        { id: 'a', position: { x: 0, y: 0 }, data: { label: 'Node A' } },
+        { id: 'b', position: { x: 0, y: 100 }, data: { label: 'Node B' } },
     ];
     // 初始化边
     const initialEdges = [
-        { id: 'edge-1', source: 'node-1', target: 'node-2', sourceHandle: 'a' },
-        { id: 'edge-2', source: 'node-1', target: 'node-3', sourceHandle: 'b' },
+        { id: 'a->b', type: 'custom-edge', source: 'a', target: 'b' },
     ];
     // 初始化节点
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
@@ -63,11 +54,6 @@ function App() {
         },
         [setEdges]
     );
-    // 默认边选项
-    const defaultEdgeOptions = {
-        type: 'smoothstep',
-        style: {stroke: 'red'}
-    };
 
   return (
     <>
@@ -80,6 +66,7 @@ function App() {
                      onConnect={onConnect}
                      fitView={true}
                      nodeTypes={nodeTypes}
+                     edgeTypes={edgeTypes}
                      style={rfStyle}
           >
           </ReactFlow>
