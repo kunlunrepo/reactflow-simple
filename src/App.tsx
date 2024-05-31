@@ -7,7 +7,7 @@ import ReactFlow, {
     Edge,
     addEdge,
     SelectionMode,
-    MiniMap
+    MiniMap, Controls
 } from 'reactflow';
 import {useCallback, useState} from "react";
 import {initNodes} from "./flow/nodes.tsx";
@@ -72,6 +72,8 @@ function App() {
                         nodeColor={nodeColor}
                         nodeStrokeWidth={3}
                         zoomable pannable />
+                    {/*缩放控制栏*/}
+                    <Controls />
                 </ReactFlow>
             </div>
         </>
