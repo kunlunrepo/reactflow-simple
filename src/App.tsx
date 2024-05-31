@@ -1,5 +1,6 @@
 import 'reactflow/dist/style.css';  // reactflow样式
-import {ReactFlow} from "reactflow";
+import {addEdge, ReactFlow, useEdgesState, useNodesState, Edge, Connection} from "reactflow";
+import {useCallback} from "react";
 
 function App() {
     // 初始化节点
@@ -11,11 +12,20 @@ function App() {
     const initEdges = [
         {id: 'e1-2', source: '1', target: '2'}
     ]
+    // 节点变化
+    const [nodes, setNodes, onNodesChange] = useNodesState(initNodes)
+    // 边缘变化
+    const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
+    // 连线变化
+    const onConnect = useCallback((params: Connection) => {
+        console.log("reactflow 画布连线变化 onConnect：", params);
+        setEdges((eds) => addEdge(params, eds))
+    }, [setEdges]);
 
   return (
     <>
       <div style={{width: '100vw', height: '100vh'}}>
-          <ReactFlow nodes={initNodes} edges={initEdges}/>
+          <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect}/>
       </div>
     </>
   )
