@@ -21,10 +21,12 @@ function App() {
     const initialNodes = [
         { id: 'a', position: { x: 0, y: 0 }, data: { label: 'Node A' } },
         { id: 'b', position: { x: 0, y: 100 }, data: { label: 'Node B' } },
+        { id: 'c', position: { x: 0, y: 200 }, data: { label: 'Node C' } },
     ];
     // 初始化边
     const initialEdges = [
         { id: 'a->b', type: 'custom-edge', source: 'a', target: 'b' },
+        { id: 'b->c', type: 'custom-edge', source: 'b', target: 'c' },
     ];
     // 初始化节点
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
