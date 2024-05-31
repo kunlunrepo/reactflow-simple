@@ -1,54 +1,30 @@
 import 'reactflow/dist/style.css';  // reactflow样式
-import {
-    addEdge,
-    ReactFlow,
-    useEdgesState,
-    useNodesState,
-    Edge,
-    Connection,
-    Controls,
-    MiniMap,
-    Background, BackgroundVariant
-} from "reactflow";
+import ReactFlow, { applyEdgeChanges, applyNodeChanges, NodeChange, Node, Edge } from 'reactflow';
 import {useCallback, useState} from "react";
+import {initNodes} from "./flow/nodes.tsx";
+import {initEdges} from "./flow/edges.tsx";
 
 function App() {
     // 初始化节点
-    const initNodes = [
-        {
-            id: '1',
-            type: 'input',
-            data: { label: 'Input Node' },
-            position: { x: 250, y: 25 },
-        },
-        {
-            id: '2',
-            // 也可以使用ReactComponent作为标签
-            data: { label: <div>Default Node</div> },
-            position: { x: 100, y: 125 },
-        },
-        {
-            id: '3',
-            type: 'output',
-            data: { label: 'Output Node' },
-            position: { x: 250, y: 250 },
-        },
-    ];
-    // 初始化边
-    const initEdges = [
-        { id: 'e1-2', source: '1', target: '2' },
-        { id: 'e2-3', source: '2', target: '3', animated: true },
-    ];
+    const [nodes, setNodes] = useState<Node[]>(initNodes)
+    // 初始化边缘
+    const [edges, setEdges] = useState<Edge[]>(initEdges);
     // 节点变化
-    const [nodes, setNodes] = useState(initNodes)
+    const onNodesChange = useCallback(
+        (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
+        [setNodes]
+    );
     // 边缘变化
-    const [edges, setEdges] = useState(initEdges);
+    const onEdgesChange = useCallback(
+        (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+        [setEdges]
+    );
 
   return (
     <>
       <div style={{width: '100vw', height: '100vh'}}>
           {/*画布*/}
-          <ReactFlow nodes={nodes} edges={edges} fitView={true}>
+          <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} fitView={true}>
           </ReactFlow>
       </div>
     </>
