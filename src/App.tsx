@@ -7,7 +7,7 @@ import ReactFlow, {
     Edge,
     addEdge,
     SelectionMode,
-    MiniMap, Controls, Background, BackgroundVariant
+    MiniMap, Controls, Background, BackgroundVariant, Panel
 } from 'reactflow';
 import {useCallback, useState} from "react";
 import {initNodes} from "./flow/nodes.tsx";
@@ -76,6 +76,13 @@ function App() {
                     <Controls />
                     {/*背景图*/}
                     <Background color="#ccc" variant={variant} />
+                    {/*控制板*/}
+                    <Panel position={"top-left"}>
+                        <div>背景图:</div>
+                        <button onClick={() => setVariant(BackgroundVariant.Dots)}>*</button>
+                        <button onClick={() => setVariant(BackgroundVariant.Lines)}>-</button>
+                        <button onClick={() => setVariant(BackgroundVariant.Cross)}>+</button>
+                    </Panel>
                 </ReactFlow>
             </div>
         </>
